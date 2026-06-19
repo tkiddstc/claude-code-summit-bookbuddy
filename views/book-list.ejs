@@ -2,6 +2,16 @@
 
 <h1>Books</h1>
 
+<div class="sort-controls">
+  <span>Sort by:</span>
+  <a href="/books?sort=title&order=<%= sort === 'title' && order === 'ASC' ? 'DESC' : 'ASC' %>"
+     class="<%= sort === 'title' ? 'active' : '' %>">Title</a>
+  <a href="/books?sort=author&order=<%= sort === 'author' && order === 'ASC' ? 'DESC' : 'ASC' %>"
+     class="<%= sort === 'author' ? 'active' : '' %>">Author</a>
+  <a href="/books?sort=created_at&order=DESC"
+     class="<%= sort === 'created_at' ? 'active' : '' %>">Newest</a>
+</div>
+
 <% if (books.length === 0) { %>
   <p class="empty">No books yet. <a href="/books/new">Add one!</a></p>
 <% } else { %>

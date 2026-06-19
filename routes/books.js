@@ -3,7 +3,12 @@ const router = express.Router();
 
 // List all books
 router.get('/', (req, res) => {
-  const all_books = req.app.locals.db.prepare('SELECT * FROM books ORDER BY created_at DESC').all();
+  const sort = req.query.sort || 'created_at';
+  const order = req.query.order || 'DESC';
+
+  const all_books = req.app.locals.db.prepare(
+    `SELECT * FROM books ORDER BY ${sort} ${order}`
+  ).all();
 
   const books_with_ratings = all_books.map(book => {
     const result = req.app.locals.db.prepare(
@@ -12,7 +17,7 @@ router.get('/', (req, res) => {
     return { ...book, avg_rating: result.avg_rating, review_count: result.review_count };
   });
 
-  res.render('book-list', { books: books_with_ratings });
+  res.render('book-list', { books: books_with_ratings, sort, order });
 });
 
 // New book form
