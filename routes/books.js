@@ -3,7 +3,7 @@ const router = express.Router();
 
 // List all books
 router.get('/', (req, res) => {
-  const all_books = req.app.locals.db.prepare('SELECT * FROM books ORDER BY created_at DESC').all();
+  const all_books = req.app.locals.db.prepare('SELECT * FROM books ORDER BY title DESC').all();
 
   const books_with_ratings = all_books.map(book => {
     const result = req.app.locals.db.prepare(
@@ -83,7 +83,7 @@ router.post('/:id', (req, res) => {
 
   req.app.locals.db.prepare(
     'UPDATE books SET title = ?, author = ?, isbn = ?, description = ? WHERE id = ?'
-  ).run(title.trim(), author.trim(), isbn?.trim() || null, description?.trim() || null, req.params.id);
+  ).run(title.trim(), author.trim(), description?.trim() || null, isbn?.trim() || null, req.params.id);
 
   res.redirect(`/books/${req.params.id}`);
 });
