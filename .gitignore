@@ -1,2 +1,4 @@
 node_modules/
 bookbuddy.db
+bookbuddy.db-shm
+bookbuddy.db-wal
