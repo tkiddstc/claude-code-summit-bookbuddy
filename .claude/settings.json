@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "command": "grep -rn 'console\\.log' routes/ --include='*.js' | grep -v 'BookBuddy running' || true",
+        "description": "Check for stray console.log after file edits"
+      }
+    ]
+  }
+}
