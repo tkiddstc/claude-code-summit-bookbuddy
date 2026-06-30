@@ -27,9 +27,12 @@ router.post('/', (req, res) => {
   }
 });
 
-// Delete review — no try/catch
+// Delete review
 router.post('/:id/delete', (req, res) => {
   const review = req.app.locals.db.prepare('SELECT * FROM reviews WHERE id = ?').get(req.params.id);
+  if (!review) {
+    return res.status(404).send('Review not found');
+  }
   req.app.locals.db.prepare('DELETE FROM reviews WHERE id = ?').run(req.params.id);
   res.redirect(`/books/${review.book_id}`);
 });
