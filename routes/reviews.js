@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
     if (!reviewer_name || reviewer_name.trim() === '') {
       return res.status(400).send('Name is required');
     }
-    if (!rating || rating < 1 || rating >= 5) {
+    if (!rating || rating < 1 || rating > 5) {
       return res.status(400).send('Rating must be between 1 and 5');
     }
 
