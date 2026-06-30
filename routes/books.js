@@ -70,7 +70,7 @@ router.get('/:id/edit', (req, res) => {
   res.render('book-form', { book, error: null });
 });
 
-// Update book — no try/catch
+// Update book
 router.post('/:id', (req, res) => {
   const { title, author, isbn, description } = req.body;
 
@@ -79,6 +79,11 @@ router.post('/:id', (req, res) => {
   }
   if (!author || author.trim() === '') {
     return res.status(400).send('Author is required');
+  }
+
+  const book = req.app.locals.db.prepare('SELECT id FROM books WHERE id = ?').get(req.params.id);
+  if (!book) {
+    return res.status(404).send('Book not found');
   }
 
   req.app.locals.db.prepare(
