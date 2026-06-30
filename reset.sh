@@ -33,7 +33,7 @@ rm -f bookbuddy.db bookbuddy.db-shm bookbuddy.db-wal
 
 case "${1:-}" in
   1)
-    git checkout main 2>/dev/null
+    git checkout demo/code-gen 2>/dev/null
     node seed.js
     echo "Reset for Session 1 — Code generation & editing"
     echo "Run: npm start"
