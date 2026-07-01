@@ -1,34 +1,9 @@
 const express = require('express');
 const path = require('path');
-const Database = require('better-sqlite3');
+const { createDb } = require('./db');
 
 const app = express();
-const db = new Database(path.join(__dirname, 'bookbuddy.db'));
-
-db.pragma('journal_mode = WAL');
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS books (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    author TEXT NOT NULL,
-    isbn TEXT,
-    description TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  )
-`);
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS reviews (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    book_id INTEGER NOT NULL,
-    reviewer_name TEXT NOT NULL,
-    rating INTEGER NOT NULL,
-    review_text TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (book_id) REFERENCES books(id)
-  )
-`);
+const db = createDb(path.join(__dirname, 'bookbuddy.db'));
 
 app.locals.db = db;
 
@@ -40,9 +15,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/books', require('./routes/books'));
 app.use('/reviews', require('./routes/reviews'));
 
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 app.get('/', (req, res) => res.redirect('/books'));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`BookBuddy running at http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`BookBuddy running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
