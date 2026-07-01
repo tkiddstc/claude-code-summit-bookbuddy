@@ -40,9 +40,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/books', require('./routes/books'));
 app.use('/reviews', require('./routes/reviews'));
 
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 app.get('/', (req, res) => res.redirect('/books'));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`BookBuddy running at http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`BookBuddy running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
